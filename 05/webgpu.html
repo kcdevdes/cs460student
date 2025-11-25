@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>WebGPU with Babylon.js</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    </style>
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.min.js"></script>
+  </head>
+  <body>
+    <canvas id="renderCanvas"></canvas>
+
+    <script type="module">
+      // get reference to canvas
+      const canvas = document.getElementById('renderCanvas');
+
+      // create WebGPU engine
+      let engine = new BABYLON.WebGPUEngine(canvas, { antialiasing: true });
+      await engine.initAsync();
+
+      // create scene
+      const scene = new BABYLON.Scene(engine);
+
+      // load the glTF model
+      await BABYLON.SceneLoader.AppendAsync('', 'penguin_original.glb', scene);
+
+      // setup camera and lights
+      scene.createDefaultCameraOrLight(true, true, true);
+      scene.activeCamera.attachControl(canvas, true);
+
+      // render loop
+      engine.runRenderLoop(() => scene.render());
+
+      // handle window resize
+      addEventListener('resize', () => engine.resize());
+    </script>
+  </body>
+</html>
